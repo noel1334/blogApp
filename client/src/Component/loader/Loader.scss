@@ -1,0 +1,27 @@
+
+.loader {
+    display: inline-block;
+    border: 4px solid #ccc;
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+  
+  }
+  .loading{
+    text-align: center;
+    color: rgb(12, 124, 100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50%;
+    font-size: 40px;
+  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+ 

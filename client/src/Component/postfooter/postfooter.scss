@@ -1,0 +1,85 @@
+.post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 30px;
+    gap: 30px;
+    width: 50%;
+    margin: auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  
+    @media (max-width: 768px) and (max-width: 468px) {
+      width: 100%;
+    }
+  
+    .icon {
+      font-size: 18px;
+      transition: color 0.3s, transform 0.3s ease;
+      cursor: pointer;
+  
+      &:hover {
+        color: skyblue;
+        transform: scale(1.1);
+      }
+  
+      &.active {
+        color: #3498db; 
+      }
+    }
+    .icon.active-comment {
+      color: #2ecc71; // Green color for active comment state
+    }
+    
+    .footer-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+  
+      span {
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+
+    .likes-list-toggle {
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #3498db;
+      text-align: center;
+      flex: 3;
+    
+      .likes-list {
+        margin-top: 5px;
+        max-height: 400px; 
+        overflow-y: scroll; 
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        background: #f9f9f9;
+    
+        .like-user {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 8px;
+    
+          img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+          }
+    
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+    
+  }
+  

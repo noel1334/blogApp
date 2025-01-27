@@ -1,0 +1,161 @@
+.profile {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: "Arial", sans-serif;
+
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.5rem 0;
+  }
+
+  button {
+    background-color: lightseagreen;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+
+    &:hover {
+      background-color: darkcyan;
+      transition: 300ms;
+    }
+  }
+}
+
+.post {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .post {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .desc {
+      color: #666;
+      font-size: 1rem;
+      line-height: 1.6;
+      overflow: hidden;
+      display: -webkit-box;
+      text-overflow: ellipsis;
+      margin-bottom: 1rem;
+      text-align: justify;
+
+      &.expanded {
+        display: block;
+      }
+    }
+
+    .read-more-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    p:last-of-type {
+      font-size: 0.875rem;
+      color: #999;
+      font-style: italic;
+      margin-top: 1rem;
+    }
+  }
+
+  p {
+    text-align: center;
+    font-size: 1rem;
+    color: #999;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile,
+  .post {
+    padding: 1rem;
+  }
+
+  .profile img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile h1 {
+    font-size: 1.75rem;
+  }
+
+  .post h2 {
+    font-size: 1.25rem;
+  }
+
+  .post .post {
+    padding: 1rem;
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}

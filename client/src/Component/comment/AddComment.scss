@@ -1,0 +1,100 @@
+.addComment {
+  padding: 1rem;
+  background: #fff;
+  // border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  max-height: 20%;
+
+  .commentRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .userAvatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .textareaWrapper {
+      position: relative;
+      flex-grow: 1;
+
+      textarea {
+        width: 100%;
+        padding: 0.5rem;
+        padding-right: 2.5rem; // Space for the icon
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: inherit;
+        resize: none;
+        font-size: 1rem;
+
+        &:focus {
+          border-color: #3498db;
+          outline: none;
+          box-shadow: 0 0 4px rgba(52, 152, 219, 0.5);
+        }
+      }
+
+      .attachIcon {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        color: #007bff;
+        cursor: pointer;
+
+        &:hover {
+          color: #0056b3;
+        }
+      }
+    }
+
+    .submitBtn {
+      padding: 0.5rem 1rem;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &:hover {
+        background-color: #2ecc71;
+      }
+
+      &:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .previewFile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      max-width: 100%;
+      max-height: 150px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #888;
+    }
+  }
+
+  .errorText {
+    color: #e74c3c;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,191 @@
+$lightblue: lightseagreen;
+
+.add {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
+
+  .content {
+    flex: 1 1 60%;
+    max-width: 65%; 
+    input {
+      border: 1px solid rgb(180, 183, 187);
+      padding: 10px 0;
+      width: 100%;
+      outline: none;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .editorContainer {
+      margin: 30px 0;
+      width: 100%; 
+      position: relative;
+
+      .editor {
+        height: 300px; 
+        border-radius: 5px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  }
+
+  .menu {
+    flex: 1 1 35%;
+    max-width: 35%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+      h2 {
+        color: #535353;
+        font-size: 20px;
+        font-weight: 400;
+      }
+
+      .current-image {
+        margin-bottom: 10px;
+
+        img {
+          max-width: 100%;
+          max-height: 200px;
+          object-fit: cover;
+          border-radius: 5px;
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .upload {
+        text-decoration: underline;
+        margin-bottom: 5px;
+        cursor: pointer;
+        color: $lightblue;
+
+        &:hover {
+          color: darkcyan;
+        }
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+
+        button {
+          padding: 5px 10px;
+          border: 1px solid darkcyan;
+          cursor: pointer;
+
+          &:first-child {
+            background-color: white;
+            color: darkcyan;
+
+            &:hover {
+              background-color: darkcyan;
+              color: white;
+              transition: 300ms;
+            }
+          }
+
+          &:last-child {
+            background-color: darkcyan;
+            color: white;
+
+            &:hover {
+              background-color: white;
+              color: darkcyan;
+              transition: 300ms;
+            }
+          }
+        }
+      }
+
+      .cat {
+        display: flex;
+        gap: 10px;
+
+        label {
+          color: $lightblue;
+          cursor: pointer;
+
+          &:hover {
+            color: darkcyan;
+          }
+        }
+      }
+    }
+  }
+
+  /* Responsive styles */
+  @media (max-width: 1024px) {
+    .add {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .content {
+      max-width: 100%;
+    }
+
+    .menu {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+
+    .menu {
+      flex: 1 1 100%;
+      max-width: 100%;
+      margin-top: 20px;
+    }
+
+    .item h2 {
+      font-size: 18px;
+    }
+
+    .editorContainer .editor {
+      height: 300px;
+    }
+
+    .current-image img {
+      max-height: 150px;
+    }
+
+    button {
+      padding: 8px 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content input {
+      font-size: 14px;
+    }
+
+    .editorContainer .editor {
+      height: 250px;
+    }
+
+    .item h2 {
+      font-size: 16px;
+    }
+
+    .buttons button {
+      font-size: 14px;
+    }
+  }
+}
