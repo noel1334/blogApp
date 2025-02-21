@@ -1,4 +1,4 @@
-import Post from "../models/post.js";
+import Post from "../models/Post.js";
 import db from "../config/db.js";  
 import axios from "axios";
 
