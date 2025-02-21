@@ -1,7 +1,8 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import "./updateProfile.scss";
 import axiosInstance from "../../util/axiosInstance";
 import { AuthContext } from "../../context/authContext";
+import { FaImage } from "react-icons/fa"; // Import the image icon
 
 const UpdateProfile = ({ setIsEditing }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -10,9 +11,15 @@ const UpdateProfile = ({ setIsEditing }) => {
   const [tempImg, setTempImg] = useState(null);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fileInputRef = useRef(null);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
+
     try {
       const formData = new FormData();
       formData.append("username", username);
@@ -38,6 +45,8 @@ const UpdateProfile = ({ setIsEditing }) => {
       setMessage(
         "Failed to update profile. Please check your inputs and try again."
       );
+    } finally {
+      setIsLoading(false); // Set loading to false when update finishes (success or fail)
     }
   };
 
@@ -47,6 +56,10 @@ const UpdateProfile = ({ setIsEditing }) => {
       setUserImg(file);
       setTempImg(URL.createObjectURL(file));
     }
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current.click(); // Programmatically click the file input
   };
 
   return (
@@ -60,11 +73,26 @@ const UpdateProfile = ({ setIsEditing }) => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            disabled={isLoading}
           />
         </div>
         <div className="formGroup">
           <label htmlFor="userImg">Profile Picture</label>
-          <input type="file" id="userImg" onChange={handleImageChange} />
+          <div className="image-upload-container">
+            <FaImage
+              className="image-upload-icon"
+              onClick={handleIconClick}
+              style={{ cursor: "pointer" }}
+            />
+            <input
+              type="file"
+              id="userImg"
+              onChange={handleImageChange}
+              disabled={isLoading}
+              ref={fileInputRef} // Attach the ref
+              style={{ display: "none" }} // Hide the file input
+            />
+          </div>
           {tempImg && (
             <img src={tempImg} alt="Temporary Preview" className="tempImage" />
           )}
@@ -77,10 +105,21 @@ const UpdateProfile = ({ setIsEditing }) => {
             placeholder="Leave blank to keep current password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
         </div>
-        <button type="submit">Update Profile</button>
-        <button type="button" onClick={() => setIsEditing(false)}>
+        <button
+          type="submit"
+          disabled={isLoading}
+          style={{ cursor: isLoading ? "not-allowed" : "pointer" }}
+        >
+          {isLoading ? "Updating..." : "Update Profile"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsEditing(false)}
+          disabled={isLoading}
+        >
           Cancel
         </button>
       </form>

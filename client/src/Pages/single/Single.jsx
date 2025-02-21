@@ -22,7 +22,6 @@ const Single = () => {
   const location = useLocation();
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,7 +117,7 @@ const Single = () => {
           {post.img && (
             <div className="img">
               <img
-                src={`${baseUrl}/uploads/${post?.img}` || "./default-image.png"}
+                src={`${post?.img}` || "./default-image.png"}
                 alt={post?.title}
               />
             </div>
@@ -148,20 +147,14 @@ const Single = () => {
                   <Link className="link editBtn" to={`/profile/${post.uid}`}>
                     <img
                       src={
-                        post.userImg
-                          ? `${baseUrl}/uploads/${post.userImg}`
-                          : "/default-user.png"
+                        post.userImg ? `${post.userImg}` : "/default-user.png"
                       }
                       alt={post?.username}
                     />
                   </Link>
                 ) : (
                   <img
-                    src={
-                      post.userImg
-                        ? `${baseUrl}/uploads/${post.userImg}`
-                        : "/default-user.png"
-                    }
+                    src={post.userImg ? `${post.userImg}` : "/default-user.png"}
                     alt={post?.username}
                   />
                 )}

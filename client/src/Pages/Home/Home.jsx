@@ -10,7 +10,6 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const cat = useLocation().search;
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
   const [expandedPosts, setExpandedPosts] = useState({});
 
   useEffect(() => {
@@ -19,8 +18,13 @@ const Home = () => {
       setError(null);
       try {
         const res = await axiosInstance.get(`/posts${cat}`);
+        const postsData = res.data;
+
+        // Sort the posts array in descending order based on the post's date
+        postsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         const postsWithLikesAndComments = await Promise.all(
-          res.data.map(async (post) => {
+          postsData.map(async (post) => {
             const [
               likesResponse,
               likeStatusResponse,
@@ -107,7 +111,7 @@ const Home = () => {
               {posts.map((post) => (
                 <div className="post" key={post?.id}>
                   <Link className="link img" to={`/post/${post.id}`}>
-                    <img src={`${baseUrl}/uploads/${post?.img}`} alt="" />
+                    <img src={`${post?.img}`} alt="" />
                   </Link>
                   <div className="content">
                     <Link className="link" to={`/post/${post.id}`}>

@@ -10,12 +10,10 @@ const PostFooter = ({
   onLikeToggle,
   likedUsers = [],
   postId,
-  hasCommented, // New prop
+  hasCommented,
 }) => {
   const [isLiked, setIsLiked] = useState(initialLikedState);
   const [showLikes, setShowLikes] = useState(false);
-
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   const handleLikeClick = () => {
     const newLikeState = !isLiked;
@@ -43,9 +41,7 @@ const PostFooter = ({
                   <Link className="link editBtn" to={`/profile/${user.userId}`}>
                     <img
                       src={
-                        user.userImg
-                          ? `${baseUrl}/uploads/${user.userImg}`
-                          : "/default-user.png"
+                        user.userImg ? `${user.userImg}` : "/default-user.png"
                       }
                       alt={user.username}
                     />

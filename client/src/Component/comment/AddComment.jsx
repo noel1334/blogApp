@@ -13,12 +13,10 @@ const AddComment = ({ onComment, postId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef(null);
 
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
   const profileImg = currentUser?.img
-    ? `${baseUrl}/uploads/${currentUser.img}`
+    ? `${currentUser.img}`
     : "/default-user.png";
-
+  console.log(profileImg);
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {

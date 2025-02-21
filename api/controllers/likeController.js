@@ -1,9 +1,9 @@
 import Like from "../models/like.js";
-import Post from "../models/post.js"; // Optional if needed for post-related validations
+import Post from "../models/post.js"; 
 
 export const toggleLike = async (req, res) => {
   const { postId } = req.params;
-  const userId = req.user.id; // Assumes `req.user` contains authenticated user's data
+  const userId = req.user.id;
   const date = new Date();
 
   try {

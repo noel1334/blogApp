@@ -1,18 +1,30 @@
 import Post from "../models/post.js";
-import path from "path";
-import fs from "fs";
+import db from "../config/db.js";  
+import axios from "axios";
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-// Helper function to delete an image file
-const deleteImageFile = (filePath) => {
-  if (fs.existsSync(filePath)) {
-    fs.unlink(filePath, (err) => {
-      if (err) console.error("Failed to delete image:", err);
-      else console.log("Image deleted successfully:", filePath);
+// Function to upload to ImgBB
+const uploadToImgBB = async (fileBuffer, apiKey) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", new Blob([fileBuffer]));  // Use Blob
+    formData.append("key", apiKey);
+
+    const response = await axios.post("https://api.imgbb.com/1/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-  } else {
-    console.log("Image file does not exist:", filePath);
+
+    if (response.data.success) {
+      return response.data.data.url;
+    } else {
+      console.error("ImgBB upload failed:", response.data);
+      throw new Error("ImgBB upload failed");
+    }
+  } catch (error) {
+    console.error("Error uploading to ImgBB:", error);
+    throw error;
   }
 };
 
@@ -20,20 +32,25 @@ const deleteImageFile = (filePath) => {
 export const createPost = async (req, res) => {
   const { title, desc, category } = req.body;
   const userId = req.user.id;
-  const img = req.file ? req.file.filename : null;
+  let img = null;
   const date = new Date();
+  const apiKey = process.env.IMGBB_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ message: "ImgBB API key not set in environment." });
+  }
 
   try {
+    if (req.file) {
+      img = await uploadToImgBB(req.file.buffer, apiKey);  
+    }
+
     const result = await Post.create(title, desc, img, date, userId, category);
     res.status(200).json({
       message: "Post created successfully",
       postId: result[0].insertId,
     });
   } catch (err) {
-    if (img) {
-      const filePath = path.join(__dirname, "..", "uploads", img).replace(/^\\/, "");
-      deleteImageFile(filePath);
-    }
     console.error("Error creating post:", err);
     res.status(500).json({ message: "Error creating post.", error: err });
   }
@@ -43,40 +60,35 @@ export const createPost = async (req, res) => {
 export const updatePost = async (req, res) => {
   const { postId } = req.params;
   const { title, desc, category } = req.body;
-  const img = req.file ? req.file.filename : null;
+  let img = null;
   const date = new Date();
+  const apiKey = process.env.IMGBB_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ message: "ImgBB API key not set in environment." });
+  }
 
   if (!title || !desc || !category || !postId) {
-    if (img) {
-      const filePath = path.join(__dirname, "..", "uploads", img).replace(/^\\/, "");
-      deleteImageFile(filePath);
-    }
     return res.status(400).json("Missing required fields");
   }
 
   try {
     const post = await Post.findById(postId);
     if (!post || post.uid !== req.user.id) {
-      if (img) {
-        const filePath = path.join(__dirname, "..", "uploads", img).replace(/^\\/, "");
-        deleteImageFile(filePath);
-      }
       return res.status(403).json("Unauthorized to update this post");
     }
 
-    // Delete the old image if a new image is being uploaded
-    if (img && post.img) {
-      const oldImagePath = path.join(__dirname, "..", "uploads", post.img).replace(/^\\/, "");
-      deleteImageFile(oldImagePath);
+    if (req.file) {
+      img = await uploadToImgBB(req.file.buffer, apiKey);
+
+      if (post.img) {
+        // Implement logic to delete from ImgBB using the stored deletion URL if available.
+      }
     }
 
     await Post.update(postId, title, desc, img, date, category, !!img);
     res.status(200).json({ message: "Post updated successfully" });
   } catch (err) {
-    if (img) {
-      const filePath = path.join(__dirname, "..", "uploads", img).replace(/^\\/, "");
-      deleteImageFile(filePath);
-    }
     console.error("Error updating post:", err);
     res.status(500).json("Failed to update post");
   }
@@ -92,10 +104,8 @@ export const deletePost = async (req, res) => {
       return res.status(403).json("Unauthorized to delete this post");
     }
 
-    // Delete the associated image if it exists
     if (post.img) {
-      const filePath = path.join(__dirname, "..", "uploads", post.img).replace(/^\\/, "");
-      deleteImageFile(filePath);
+      // Implement logic to delete from ImgBB using the stored deletion URL if available.
     }
 
     await Post.delete(postId);
@@ -152,10 +162,9 @@ export const getCategories = async (req, res) => {
   try {
     const sql = 'SELECT DISTINCT cat FROM categories';
     const [categories] = await db.execute(sql);
-    res.status(200).json(categories); // Return categories as a JSON response
+    res.status(200).json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
     res.status(500).json({ message: "Failed to fetch categories", error });
   }
 };
-

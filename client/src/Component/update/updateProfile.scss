@@ -75,3 +75,20 @@
     }
   }
   
+
+.image-upload-container {
+  position: relative;
+  display: inline-block; 
+}
+
+.image-upload-icon {
+  font-size: 2em; 
+  color: #555; 
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-top: 10px; /* Added margin for spacing */
+
+  &:hover {
+    color: #007bff; /* Change color on hover */
+  }
+}

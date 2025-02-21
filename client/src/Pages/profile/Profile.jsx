@@ -6,11 +6,10 @@ import { AuthContext } from "../../context/authContext";
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   // Check if profile image exists, if not, fallback to default image
   const profileImg = currentUser?.img
-    ? `${baseUrl}/uploads/${currentUser.img}`
+    ? `${currentUser.img}`
     : "/default-user.png";
 
   return (

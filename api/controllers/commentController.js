@@ -1,34 +1,54 @@
-import path from "path";
-import fs from "fs";
+import db from "../config/db.js";  
 import Comment from "../models/Comment.js";
-import db from "../config/db.js";
+import axios from "axios";
 
-// Update the __dirname workaround for ES Modules
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// Function to upload to ImgBB (same as in postController)
+const uploadToImgBB = async (fileBuffer, apiKey) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", new Blob([fileBuffer]));
+    formData.append("key", apiKey);
 
-// Helper function to delete an image file
-const deleteImageFile = (filePath) => {
-  if (fs.existsSync(filePath)) {
-    fs.unlink(filePath, (err) => {
-      if (err) console.error("Failed to delete image:", err);
-      else console.log("Image deleted successfully:", filePath);
+    const response = await axios.post("https://api.imgbb.com/1/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-  } else {
-    console.log("Image file does not exist:", filePath);
+
+    if (response.data.success) {
+      return response.data.data.url;
+    } else {
+      console.error("ImgBB upload failed:", response.data);
+      throw new Error("ImgBB upload failed");
+    }
+  } catch (error) {
+    console.error("Error uploading to ImgBB:", error);
+    throw error;
   }
 };
+
 
 // Add a new comment
 export const addComment = async (req, res) => {
   const { postId } = req.params;
   const { commentText } = req.body;
-  const file = req.file ? req.file.filename : null;
   const userId = req.user.id;
   const date = new Date();
+  let file = null; // Changed from req.file to file
+  const apiKey = process.env.IMGBB_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ message: "ImgBB API key not set in environment." });
+  }
 
   try {
-    if (!commentText && !file) {
+    if (!commentText && !req.file) {
       return res.status(400).json({ message: "Comment text or file is required." });
+    }
+
+    //Upload file to ImgBB if exist
+    if (req.file) {
+      file = await uploadToImgBB(req.file.buffer, apiKey);
     }
 
     // Attempt to add the comment
@@ -48,13 +68,6 @@ export const addComment = async (req, res) => {
     });
   } catch (error) {
     console.error("Error adding comment:", error);
-
-    // If there was an error, delete the uploaded image (if any)
-    if (file) {
-      const filePath = path.join(__dirname, "..", "uploads", file).replace(/^\\/, "");
-      deleteImageFile(filePath); // Delete the image file
-    }
-
     res.status(500).json({ message: "Failed to add comment" });
   }
 };
@@ -76,9 +89,14 @@ export const getComments = async (req, res) => {
 export const updateComment = async (req, res) => {
   const { commentId } = req.params;
   const { commentText } = req.body;
-  const file = req.file ? req.file.filename : null;
   const userId = req.user.id;
   const date = new Date();
+  let file = null;
+  const apiKey = process.env.IMGBB_API_KEY;
+
+  if (!apiKey) {
+    return res.status(500).json({ message: "ImgBB API key not set in environment." });
+  }
 
   try {
     // Check if comment exists and belongs to the user
@@ -90,21 +108,17 @@ export const updateComment = async (req, res) => {
       return res.status(403).json("Unauthorized to update this comment");
     }
 
-    // If there's a new file and the comment already has a file, delete the old one
-    if (file && comment.file) {
-      const oldFilePath = path.join(__dirname, "..", "uploads", comment.file).replace(/^\\/, "");
-      // Delete the old file only if the new file is different
-      if (comment.file !== file) {
-        deleteImageFile(oldFilePath);
-      }
+    //Handle file upload to ImgBB
+     if (req.file) {
+      file = await uploadToImgBB(req.file.buffer, apiKey);
     }
 
-    // Update the comment in the database (retain the old file if no new file is uploaded)
+    // Update the comment in the database
     const updatedComment = await Comment.updateComment(
       commentId,
       userId,
       commentText,
-      file || comment.file, // Keep the old file if no new file is provided
+      file || comment.file, 
       date
     );
 
@@ -158,12 +172,6 @@ export const deleteComment = async (req, res) => {
     const comment = await Comment.findCommentById(commentId);
     if (!comment || comment.userId !== userId) {
       return res.status(403).json("Unauthorized to delete this comment");
-    }
-
-    // Delete old file if exists
-    if (comment.file) {
-      const oldFilePath = path.join(__dirname, "..", "uploads", comment.file).replace(/^\\/, "");
-      deleteImageFile(oldFilePath);
     }
 
     await Comment.deleteComment(commentId, userId);

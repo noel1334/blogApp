@@ -8,7 +8,6 @@ import { AuthContext } from "../../context/authContext";
 
 const User = () => {
   const { currentUser } = useContext(AuthContext);
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
   const { uid } = useParams();
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -54,11 +53,7 @@ const User = () => {
     <>
       <div className="profile">
         <img
-          src={
-            user?.profileImg
-              ? `${baseUrl}/uploads/${user?.profileImg}`
-              : "/default-user.png"
-          }
+          src={user?.profileImg ? `${user?.profileImg}` : "/default-user.png"}
           alt={user.name}
         />
         <h1>{user.name} Profile</h1>
@@ -80,9 +75,7 @@ const User = () => {
           user.posts.map((post) => (
             <div key={post.id} className="post">
               <h3>{post.title}</h3>
-              {post.img && (
-                <img src={`${baseUrl}/uploads/${post?.img}`} alt={post.title} />
-              )}
+              {post.img && <img src={`${post?.img}`} alt={post.title} />}
               <div
                 className={`desc ${post.expanded ? "expanded" : ""}`}
                 dangerouslySetInnerHTML={{ __html: post?.desc }}

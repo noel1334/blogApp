@@ -12,8 +12,6 @@ const Write = () => {
   const [currentImg, setCurrentImg] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -100,10 +98,7 @@ const Write = () => {
           <h2>Public</h2>
           {currentImg && (
             <div className="current-image">
-              <img
-                src={file ? currentImg : `${baseUrl}/uploads/${currentImg}`}
-                alt="Preview"
-              />
+              <img src={file ? currentImg : `${currentImg}`} alt="Preview" />
             </div>
           )}
           <input

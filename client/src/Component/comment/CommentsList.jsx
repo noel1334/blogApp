@@ -8,7 +8,6 @@ import axiosInstance from "../../util/axiosInstance";
 
 const CommentsList = ({ comments, onCommentUpdate }) => {
   const { currentUser } = useContext(AuthContext);
-  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
   const [showMenuId, setShowMenuId] = useState(null);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingText, setEditingText] = useState("");
@@ -102,9 +101,7 @@ const CommentsList = ({ comments, onCommentUpdate }) => {
             /> */}
             <img
               src={
-                comment?.userImg
-                  ? `${baseUrl}/uploads/${comment.userImg}`
-                  : "/default-user.png"
+                comment?.userImg ? `${comment.userImg}` : "/default-user.png"
               }
               alt="User Avatar"
               className="userAvatar"
@@ -176,10 +173,7 @@ const CommentsList = ({ comments, onCommentUpdate }) => {
               ) : (
                 comment.file && (
                   <div className="existingFile">
-                    <img
-                      src={`${baseUrl}/uploads/${comment.file}`}
-                      alt="Current File"
-                    />
+                    <img src={`${comment.file}`} alt="Current File" />
                     <p>(Current Image)</p>
                   </div>
                 )
@@ -200,10 +194,7 @@ const CommentsList = ({ comments, onCommentUpdate }) => {
           )}
           {comment.file && (
             <div className="commentFile">
-              <img
-                src={`${baseUrl}/uploads/${comment?.file}`}
-                alt="Attached File"
-              />
+              <img src={`${comment?.file}`} alt="Attached File" />
             </div>
           )}
           <div ref={endOfCommentsRef}></div>
