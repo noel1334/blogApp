@@ -1,5 +1,4 @@
 import Like from "../models/like.js";
-import Post from "../models/post.js"; 
 
 export const toggleLike = async (req, res) => {
   const { postId } = req.params;
