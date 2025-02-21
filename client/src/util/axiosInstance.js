@@ -1,7 +1,7 @@
 import axios from "axios";
 import { logoutUser } from "./authUtils";
 
-const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL || "https://blogapp-r16r.onrender.com";
 const axiosInstance = axios.create({
   baseURL: baseUrl,
   withCredentials: true,
